@@ -1,27 +1,26 @@
-#ifndef LISTS_H
-#define LISTS_H
-
+#include <stdio.h>
 #include <stdlib.h>
+#include <Python.h>
 /**
- * struct listint_s - singly linked list
- * @n: integer
- * @next: points to the next node
+ * print_python_list_info - Print some basic info about Python lists
+ * @p: PyObject
  *
- * Description: singly linked list node structure
- *
+ * Return: Nothing
  */
-typedef struct listint_s
+void print_python_list_info(PyObject *p)
 {
-    int n;
-    struct listint_s *next;
-} listint_t;
+PyObject *item;
+PyListObject *list = (PyListObject *)p;
+int i, size, alloc;
 
-size_t print_listint(const listint_t *h);
-listint_t *add_nodeint_end(listint_t **head, const int n);
-void free_listint(listint_t *head);
+size = Py_SIZE(p);
+alloc = list->allocated;
+printf("[*] Size of the Python List = %d\n", size);
+printf("[*] Allocated = %d\n", alloc);
 
-listint_t *get_nodeint_at_index(listint_t *head, unsigned int index);
-int is_palindrome(listint_t **head);
-size_t listint_len(const listint_t *h);
-
-#endif /* LISTS_H */
+for (i = 0; i < size; i++)
+{
+item =  PyList_GetItem(p, i);
+printf("Element %d: %s\n", i, Py_TYPE(item)->tp_name);
+}
+}
